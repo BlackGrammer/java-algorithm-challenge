@@ -79,10 +79,4 @@ public class Solution {
         return answerArray;
     }
 
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        System.out.println(Arrays.toString(s.solution(new String[]{"classic", "pop", "classic", "classic", "pop"}
-                , new int[]{500, 600, 150, 800, 2500})));
-    }
-
 }
