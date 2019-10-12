@@ -23,6 +23,5 @@ genres | plays | return
 
 
 #### Reference
-* https://programmers.co.kr/learn/courses/30/lessons/42578
-* http://2013.bapc.eu/
+* https://programmers.co.kr/learn/courses/30/lessons/42579
 
