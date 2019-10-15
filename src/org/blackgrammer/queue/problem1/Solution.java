@@ -52,7 +52,6 @@ public class Solution {
         // 큐의 머리부터 완료된 날짜를 증가시켜가면서 한번에 끝나는 작업수 계산
         // while 문에서 상수연산이 너무 많이 발생할수도 있지 않을까????
         // 프로그래머스에서 돌려볼때 작업수행 시간측면에서 케이스별로 간혹 매우 오래걸리는 경우가 있다
-        // (내가 작성한 방식과 2배차이 날때도 있음)
         for(int i=0; i<progresses.length; i++) {
             while(progresses[i] + (day*speeds[i]) < 100) {
                 day++;
