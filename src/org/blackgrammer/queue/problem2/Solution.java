@@ -8,7 +8,7 @@ import java.util.LinkedList;
  * 프린터 _ 프로그래머스 _ 스택/큐
  *
  * @author blackgrammer
- * @see <a href="https://programmers.co.kr/learn/courses/30/lessons/42587">
+ * @see <a href="https://programmers.co.kr/learn/courses/30/lessons/42587">프로그래머스</a>
  */
 
 public class Solution {
