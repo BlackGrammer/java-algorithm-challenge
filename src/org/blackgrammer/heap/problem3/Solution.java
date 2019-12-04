@@ -13,32 +13,45 @@ import java.util.PriorityQueue;
 public class Solution {
 
     public int solution(int[][] jobs) {
-
         Arrays.sort(jobs, Comparator.comparingInt(o -> o[0]));
-
-        PriorityQueue<int[]> controllerQueue = new PriorityQueue<>((o1, o2) -> {
-            if (o1[0] + o1[1] <= o2[0]) {
-                return -1;
-            } else {
-                return o1[1] - o2[1];
-            }
-        });
-
+        PriorityQueue<int[]> controllerQueue = new PriorityQueue<>(Comparator.comparingInt(o -> o[1]));
         int answer = 0;
         int lastTime = 0;
+        int jobIdx = 0;
 
-        for (int[] job : jobs) {
-            controllerQueue.offer(job);
+        while (jobIdx < jobs.length) {
+            int[] targetJob = jobs[jobIdx];
+            if (targetJob[0] < lastTime) {
+                controllerQueue.offer(targetJob);
+                jobIdx++;
+                continue;
+            }
+
+            if (controllerQueue.isEmpty()) {
+                int[] nextJob = jobs[jobIdx];
+                lastTime = nextJob[0] + nextJob[1];
+                answer += nextJob[1];
+                jobIdx++;
+            } else {
+                int[] priorityJob = controllerQueue.poll();
+                lastTime += priorityJob[1];
+                answer += lastTime - priorityJob[0];
+
+                if (jobIdx == jobs.length - 1) {
+                    controllerQueue.offer(jobs[jobIdx]);
+                    jobIdx++;
+                }
+            }
         }
 
         while (!controllerQueue.isEmpty()) {
-            int[] nextJob = controllerQueue.poll();
-            if (lastTime >= nextJob[0]) {
-                lastTime += nextJob[1];
+            int[] priorityJob = controllerQueue.poll();
+            if (lastTime < priorityJob[0]) {
+                lastTime = priorityJob[0] + priorityJob[1];
             } else {
-                lastTime = nextJob[0] + nextJob[1];
+                lastTime += priorityJob[1];
             }
-            answer += lastTime - nextJob[0];
+            answer += lastTime - priorityJob[0];
         }
 
         return answer / jobs.length;
@@ -46,6 +59,6 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.solution(new int[][]{{0, 3}, {1, 9}, {2, 6}}));
+        System.out.println(s.solution(new int[][]{{1, 9}, {0, 3}, {2, 6}}));
     }
 }
