@@ -13,7 +13,13 @@ import java.util.PriorityQueue;
 public class Solution {
 
     public int solution(int[][] jobs) {
-        Arrays.sort(jobs, Comparator.comparingInt(o -> o[0]));
+        Arrays.sort(jobs, (o1, o2) -> {
+            if (o1[0] != o2[0]) {
+                return o2[0] - o1[0];
+            } else {
+                return o2[1] - o1[1];
+            }
+        });
         PriorityQueue<int[]> controllerQueue = new PriorityQueue<>(Comparator.comparingInt(o -> o[1]));
         int answer = 0;
         int lastTime = 0;
@@ -21,7 +27,7 @@ public class Solution {
 
         while (jobIdx < jobs.length) {
             int[] targetJob = jobs[jobIdx];
-            if (targetJob[0] < lastTime) {
+            if (targetJob[0] <= lastTime) {
                 controllerQueue.offer(targetJob);
                 jobIdx++;
                 continue;
