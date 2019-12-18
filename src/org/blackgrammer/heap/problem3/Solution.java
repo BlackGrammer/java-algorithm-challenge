@@ -63,8 +63,4 @@ public class Solution {
         return answer / jobs.length;
     }
 
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        System.out.println(s.solution(new int[][]{{1, 9}, {0, 3}, {2, 6}}));
-    }
 }
