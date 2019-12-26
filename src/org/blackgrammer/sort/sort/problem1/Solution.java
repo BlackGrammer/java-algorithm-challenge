@@ -4,7 +4,7 @@ package org.blackgrammer.sort.sort.problem1;
 import java.util.Arrays;
 
 /**
- *  k번째 수 _ 프로그래머스 _ 스택/큐
+ *  k번째 수 _ 프로그래머스 _ 정렬
  *
  * @author blackgrammer
  * @see <a href="https://programmers.co.kr/learn/courses/30/lessons/42748">프로그래머스</a>
