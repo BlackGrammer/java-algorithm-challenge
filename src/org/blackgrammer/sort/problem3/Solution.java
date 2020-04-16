@@ -1,4 +1,4 @@
-package org.blackgrammer.sort.sort.problem3;
+package org.blackgrammer.sort.problem3;
 
 import java.util.Arrays;
 
