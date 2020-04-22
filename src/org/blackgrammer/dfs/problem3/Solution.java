@@ -1,6 +1,5 @@
 package org.blackgrammer.dfs.problem3;
 
-import javax.xml.transform.SourceLocator;
 import java.util.*;
 
 /**
@@ -12,7 +11,6 @@ import java.util.*;
 public class Solution {
 
     public int solution(String begin, String target, String[] words) {
-
         Set<Integer> caseCntSet = new HashSet<>();
 
         for (int i = 0, len = words.length; i < len; i++) {
@@ -25,7 +23,6 @@ public class Solution {
     }
 
     private void getCaseCnt(int index, String[] words, String target, boolean[] visits, Set<Integer> caseCntSet) {
-
         visits[index] = true;
 
         if (words[index].equals(target)) {
@@ -42,9 +39,7 @@ public class Solution {
         }
     }
 
-
     private int getDiffCnt(String target, String word) {
-
         int diffCnt = 0;
         for (int i = 0, len = word.length(); i < len; i++) {
             if (target.charAt(i) != word.charAt(i)) diffCnt++;
