@@ -1,4 +1,4 @@
-package org.blackgrammer.dfs.problem1;
+package org.blackgrammer.fs.problem1;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

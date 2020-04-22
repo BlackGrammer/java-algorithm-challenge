@@ -1,4 +1,4 @@
-package org.blackgrammer.dfs.problem3;
+package org.blackgrammer.fs.problem3;
 
 import java.util.*;
 

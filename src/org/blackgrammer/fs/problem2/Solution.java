@@ -1,4 +1,4 @@
-package org.blackgrammer.dfs.problem2;
+package org.blackgrammer.fs.problem2;
 
 import java.util.HashMap;
 import java.util.Map;
