@@ -64,13 +64,4 @@ public class Solution {
         return routeArr;
     }
 
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        System.out.println(Arrays.toString(s.solution(new String[][]{{"ICN", "JFK"}, {"HND", "IAD"}, {"JFK", "HND"}})));
-        System.out.println(Arrays.toString(s.solution(new String[][]{{"ICN", "SFO"}, {"SFO", "ICN"}, {"ICN", "SFO"}, {"SFO", "QRE"}})));
-        System.out.println(Arrays.toString(s.solution(new String[][]{{"ICN", "BOO"}, {"ICN", "COO"}, {"COO", "DOO"}, {"DOO", "COO"}, {"BOO", "DOO"}, {"DOO", "BOO"}, {"BOO", "ICN"}, {"COO", "BOO"}})));
-
-    }
-
-
 }
