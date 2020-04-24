@@ -12,19 +12,11 @@ import java.util.*;
 public class Solution {
 
     public String[] solution(String[][] tickets) {
-        PriorityQueue<String> possibleRoute = new PriorityQueue<>(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                int len = o1.length();
-//                for(int i = 1,)
-                return 1;
-            }
-        });
-
+        PriorityQueue<String> possibleRoute = new PriorityQueue<>(Comparator.naturalOrder());
 
         for (int i = 0, len = tickets.length; i < len; i++) {
-            if(tickets[i][0].equals("ICN")) {
-                List<Integer> visit = new ArrayList<>();
+            if (tickets[i][0].equals("ICN")) {
+                List<Integer> visit = new LinkedList<>();
                 visit.add(i);
                 findRoute(tickets, visit, possibleRoute);
             }
@@ -40,8 +32,9 @@ public class Solution {
 
         for (int i = 0, len = tickets.length; i < len; i++) {
             if (!visit.contains(i) && tickets[i][0].equals(getLastRoute(tickets, visit))) {
-                visit.add(i);
-                findRoute(tickets, visit, possibleRoute);
+                List<Integer> copyVisit = new LinkedList<>(visit);
+                copyVisit.add(i);
+                findRoute(tickets, copyVisit, possibleRoute);
             }
         }
     }
@@ -52,7 +45,7 @@ public class Solution {
 
     private String makeRouteArrToString(List<Integer> visit, String[][] tickets) {
         StringBuilder routeStr = new StringBuilder();
-        routeStr.append(tickets[0][0]);
+        routeStr.append(tickets[visit.get(0)][0]);
 
         for (int i = 0, len = visit.size(); i < len; i++) {
             routeStr.append(tickets[visit.get(i)][1]);
@@ -74,6 +67,9 @@ public class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
         System.out.println(Arrays.toString(s.solution(new String[][]{{"ICN", "JFK"}, {"HND", "IAD"}, {"JFK", "HND"}})));
+        System.out.println(Arrays.toString(s.solution(new String[][]{{"ICN", "SFO"}, {"SFO", "ICN"}, {"ICN", "SFO"}, {"SFO", "QRE"}})));
+        System.out.println(Arrays.toString(s.solution(new String[][]{{"ICN", "BOO"}, {"ICN", "COO"}, {"COO", "DOO"}, {"DOO", "COO"}, {"BOO", "DOO"}, {"DOO", "BOO"}, {"BOO", "ICN"}, {"COO", "BOO"}})));
+
     }
 
 
