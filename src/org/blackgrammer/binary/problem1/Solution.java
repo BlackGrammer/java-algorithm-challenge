@@ -17,7 +17,7 @@ public class Solution {
         }
 
         while (true) {
-            int sumOfBudgets = 0;
+            long sumOfBudgets = 0;
             for (int budget : budgets) {
                 int possibleBudget = Math.min(budget, target);
                 sumOfBudgets += possibleBudget;
