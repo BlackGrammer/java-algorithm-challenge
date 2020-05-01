@@ -14,20 +14,20 @@ public class Solution {
 
         long minTime = 0;
         long maxTime = (long)times[0] * (long)n;
-        long target = maxTime / 2;
+        long target = maxTime / 2L;
 
         while (true) {
-            int count = 0;
+            long count = 0;
             long realTime = 0;
             boolean overFlag = false;
 
-            for (int time : times) {
-                int rowCnt = (int) (target / time);
+            for (long time : times) {
+                long rowCnt = target / time;
                 count += rowCnt;
-                realTime = Math.max(realTime, (long)rowCnt * (long)time);
+                realTime = Math.max(realTime, rowCnt * time);
                 if (count > n) {
                     maxTime = target;
-                    target = (minTime + target) / 2;
+                    target = (minTime + target) / 2L;
                     overFlag = true;
                     break;
                 }
@@ -40,7 +40,7 @@ public class Solution {
             }
 
             minTime = target;
-            target = (maxTime + target) / 2;
+            target = (maxTime + target) / 2L;
         }
         return target;
     }
