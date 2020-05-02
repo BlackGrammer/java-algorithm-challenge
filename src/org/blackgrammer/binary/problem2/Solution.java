@@ -13,7 +13,7 @@ public class Solution {
         Arrays.sort(times);
 
         long minTime = 0;
-        long maxTime = (long)times[0] * (long)n;
+        long maxTime = (long) times[0] * (long) n;
         long target = maxTime / 2L;
 
         while (true) {
@@ -38,6 +38,7 @@ public class Solution {
                 target = realTime;
                 break;
             }
+            if (maxTime - target == 1) return maxTime;
 
             minTime = target;
             target = (maxTime + target) / 2L;
