@@ -10,49 +10,82 @@ import java.util.Arrays;
  */
 public class Solution {
     public int solution(int distance, int[] rocks, int n) {
-        int answer = 0;
         Arrays.sort(rocks);
-        answer = findAnswer(distance, rocks, n, new boolean[rocks.length], 0, answer, 0);
-        return answer;
-    }
 
-    private int findAnswer(int distance, int[] rocks, int n, boolean[] eliminates, int eliminateCnt, int prevMinDistance, int start) {
-        for (int i = start, len = rocks.length; i < len; i++) {
-            boolean[] copyEliminates = Arrays.copyOf(eliminates, eliminates.length);
-            int prevEliminateCnt = eliminateCnt;
-            if (!copyEliminates[i]) {
-                copyEliminates[i] = true;
-                eliminateCnt++;
-
-                if (eliminateCnt == n) {
-                    int newMinDistance = findMinDistance(distance, rocks, copyEliminates);
-                    prevMinDistance = Math.max(prevMinDistance, newMinDistance);
-                } else {
-                    prevMinDistance = Math.max(prevMinDistance, findAnswer(distance, rocks, n, copyEliminates, eliminateCnt, prevMinDistance, i+1));
-                }
-            }
-            eliminateCnt = prevEliminateCnt;
-        }
-        return prevMinDistance;
-    }
-
-    private int findMinDistance(int distance, int[] rocks, boolean[] eliminates) {
-        int min = distance;
+        int[] diffArr = new int[rocks.length + 3];
+        diffArr[0] = 0;
+        diffArr[rocks.length + 2] = 0;
+        int idx = 1;
         int prevPos = 0;
-        for (int i = 0, len = rocks.length; i < len; i++) {
-            if (eliminates[i]) continue;
-            int pos = rocks[i];
-            min = Math.min(min, pos - prevPos);
-            prevPos = pos;
+        for (int rock : rocks) {
+            diffArr[idx] = rock - prevPos;
+            prevPos = rock;
+            idx++;
         }
-        min = Math.min(min, distance - prevPos);
-        return min;
+        diffArr[rocks.length + 1] = distance - prevPos;
+
+        while (n > 0) {
+            int minPos = 1;
+            int minNeighborPos = 2;
+            int minSum = diffArr[1] + diffArr[2];
+            for (int i = 2, len = diffArr.length - 1; i < len; i++) {
+                int target = diffArr[i];
+                int nextVal = diffArr[i + 1];
+                int prevVal = diffArr[i - 1];
+                if (diffArr[minPos] > target) {
+                    minPos = i;
+                    if (prevVal == 0) minNeighborPos = i + 1;
+                    else if (nextVal == 0) minNeighborPos = i - 1;
+                    else minNeighborPos = prevVal < nextVal ? i - 1 : i + 1;
+                    minSum = target + diffArr[minNeighborPos];
+                } else if (diffArr[minPos] == target) {
+                    if (minSum > target + nextVal) {
+                        minPos = i;
+                        minNeighborPos = i + 1;
+                        minSum = target + nextVal;
+                    }
+                    if (minSum > target + prevVal) {
+                        minPos = i;
+                        minNeighborPos = i - 1;
+                        minSum = target + nextVal;
+                    }
+                }
+
+            }
+
+            int[] newDiffArr = new int[diffArr.length - 1];
+            int newIndex = 0;
+            for (int i = 0, len = diffArr.length; i < len; i++) {
+                if (i == minPos) {
+                    if (minPos > minNeighborPos) {
+                        newDiffArr[newIndex - 1] = minSum;
+                        continue;
+                    } else {
+                        newDiffArr[newIndex] = minSum;
+                        i++;
+                    }
+                } else {
+                    newDiffArr[newIndex] = diffArr[i];
+                }
+                newIndex++;
+            }
+            diffArr = newDiffArr;
+            n--;
+        }
+
+        int minDistance = diffArr[1];
+        for (int diff : diffArr) {
+            if (diff == 0) continue;
+            minDistance = Math.min(minDistance, diff);
+        }
+        return minDistance;
     }
 
     public static void main(String[] args) {
-
-//        25  |   [2, 14, 11, 21, 17] | 2 | 4
         Solution s = new Solution();
         System.out.println(s.solution(25, new int[]{2, 14, 11, 21, 17}, 2)); // 4
+        System.out.println(s.solution(25, new int[]{3, 6, 10, 15, 23}, 1)); // 3
+        System.out.println(s.solution(25, new int[]{3, 6, 10, 15, 23}, 2)); // 4
+        System.out.println(s.solution(25, new int[]{3, 6, 10, 15, 23}, 3)); // 6
     }
 }
