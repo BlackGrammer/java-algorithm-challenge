@@ -39,15 +39,14 @@ public class Solution {
                     else minNeighborPos = prevVal < nextVal ? i - 1 : i + 1;
                     minSum = target + diffArr[minNeighborPos];
                 } else if (diffArr[minPos] == target) {
-                    if (minSum > target + nextVal) {
+                    int targetNeighbor;
+                    if (prevVal == 0) targetNeighbor = i + 1;
+                    else if (nextVal == 0) targetNeighbor = i - 1;
+                    else targetNeighbor = prevVal < nextVal ? i - 1 : i + 1;
+                    if (minSum > target + diffArr[targetNeighbor]) {
                         minPos = i;
-                        minNeighborPos = i + 1;
-                        minSum = target + nextVal;
-                    }
-                    if (minSum > target + prevVal) {
-                        minPos = i;
-                        minNeighborPos = i - 1;
-                        minSum = target + nextVal;
+                        minNeighborPos = targetNeighbor;
+                        minSum = target + diffArr[targetNeighbor];
                     }
                 }
 
