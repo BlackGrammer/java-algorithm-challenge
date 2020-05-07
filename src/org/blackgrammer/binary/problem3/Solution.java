@@ -18,21 +18,25 @@ public class Solution {
         while (true) {
             int prevPos = 0;
             int numberOfEliminate = 0;
-            int minDistance = 0;
+            int minDistance = distance;
 
             for (int rock : rocks) {
+                boolean isLast = rock == rocks[rocks.length - 1];
                 int targetDistance = rock - prevPos;
-                if (targetDistance < middle) numberOfEliminate++;
-                else {
-                    minDistance = minDistance == 0 ? targetDistance : Math.min(minDistance, targetDistance);
-                    prevPos = rock;
+                if (targetDistance < middle) {
+                    numberOfEliminate++;
+                } else {
+                    if (isLast && distance - rock < middle) {
+                        numberOfEliminate++;
+                        minDistance = Math.min(minDistance, distance - prevPos);
+                    } else {
+                        minDistance = Math.min(minDistance, targetDistance);
+                        prevPos = rock;
+                    }
                 }
             }
 
-            int lastDistance = distance - prevPos;
-            if (lastDistance < middle) numberOfEliminate++;
-
-            if (numberOfEliminate == n || Math.abs(left - right) <= 1) return Math.min(minDistance, lastDistance);
+            if (numberOfEliminate == n || Math.abs(left - right) <= 1) return minDistance;
 
             if (numberOfEliminate > n) right = middle;
             else left = middle;
@@ -50,5 +54,6 @@ public class Solution {
         System.out.println(s.solution(12, new int[]{2, 4, 6, 8, 10}, 4)); // 6
         System.out.println(s.solution(12, new int[]{2, 4, 6, 8, 10}, 1)); // 2
         System.out.println(s.solution(11, new int[]{2, 4, 6, 8, 10}, 1)); // 2
+        System.out.println(s.solution(11, new int[]{2, 4, 6, 8, 10}, 5)); // 11
     }
 }
