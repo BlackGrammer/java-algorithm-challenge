@@ -56,4 +56,5 @@ public class Solution {
         System.out.println(s.solution(11, new int[]{2, 4, 6, 8, 10}, 1)); // 2
         System.out.println(s.solution(11, new int[]{2, 4, 6, 8, 10}, 5)); // 11
     }
+    // termux test
 }
