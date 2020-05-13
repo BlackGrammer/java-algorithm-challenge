@@ -1,6 +1,7 @@
 package org.blackgrammer.binary.problem3;
 
-import java.util.Arrays;
+import java.sql.Array;
+import java.util.*;
 
 /**
  * 징검다리 _ 프로그래머스 _ 이분탐색
@@ -11,50 +12,29 @@ import java.util.Arrays;
 public class Solution {
     public int solution(int distance, int[] rocks, int n) {
         Arrays.sort(rocks);
-        int left = 0;
-        int right = distance;
-        int middle = distance / 2;
+        int answer = 0, left = 1, right = distance;
 
-        while (true) {
-            int prevPos = 0;
-            int numberOfEliminate = 0;
-            int minDistance = distance;
+        while (left <= right) {
+            int middle = (left + right) / 2;
+            int prevRock = 0;
+            int eliminatedCnt = 0;
 
             for (int rock : rocks) {
-                boolean isLast = rock == rocks[rocks.length - 1];
-                int targetDistance = rock - prevPos;
-                if (targetDistance < middle) {
-                    numberOfEliminate++;
+                if (rock - prevRock < middle) {
+                    eliminatedCnt++;
                 } else {
-                    if (isLast && distance - rock < middle) {
-                        numberOfEliminate++;
-                        minDistance = Math.min(minDistance, distance - prevPos);
-                    } else {
-                        minDistance = Math.min(minDistance, targetDistance);
-                        prevPos = rock;
-                    }
+                    prevRock = rock;
                 }
             }
+            if (distance - prevRock < middle) eliminatedCnt++;
 
-            if (numberOfEliminate == n || Math.abs(left - right) <= 1) return minDistance;
-
-            if (numberOfEliminate > n) right = middle;
-            else left = middle;
-            middle = (left + right) / 2;
+            if (eliminatedCnt <= n) {
+                answer = Math.max(middle, answer);
+                left = middle + 1;
+            } else {
+                right = middle - 1;
+            }
         }
+        return answer;
     }
-
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        System.out.println(s.solution(25, new int[]{2, 14, 11, 21, 17}, 2)); // 4
-        System.out.println(s.solution(25, new int[]{3, 6, 10, 15, 23}, 1)); // 3
-        System.out.println(s.solution(25, new int[]{3, 6, 10, 15, 23}, 2)); // 4
-        System.out.println(s.solution(25, new int[]{3, 6, 10, 15, 23}, 3)); // 6
-        System.out.println(s.solution(12, new int[]{2, 4, 6, 8, 10}, 3)); // 4
-        System.out.println(s.solution(12, new int[]{2, 4, 6, 8, 10}, 4)); // 6
-        System.out.println(s.solution(12, new int[]{2, 4, 6, 8, 10}, 1)); // 2
-        System.out.println(s.solution(11, new int[]{2, 4, 6, 8, 10}, 1)); // 2
-        System.out.println(s.solution(11, new int[]{2, 4, 6, 8, 10}, 5)); // 11
-    }
-    // termux test
 }
