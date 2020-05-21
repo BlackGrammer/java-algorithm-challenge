@@ -13,19 +13,19 @@ public class Solution {
         int length = number.length();
         int maxIdx = 0;
         int remain = length - k;
-        StringBuilder answer = new StringBuilder();
+        char[] answerArr = new char[remain];
 
         while(true) {
             for(int i = maxIdx; i < length - remain + 1; i++ ){
                 if(number.charAt(maxIdx) < number.charAt(i)) maxIdx = i;
             }
-            answer.append(number.charAt(maxIdx));
+            answerArr[answerArr.length - remain] = number.charAt(maxIdx);
             maxIdx ++;
             remain --;
-            if(answer.length() == length - k) break;
+            if(remain == 0) break;
         }
 
-        return answer.toString();
+        return new String(answerArr);
     }
 
 }
