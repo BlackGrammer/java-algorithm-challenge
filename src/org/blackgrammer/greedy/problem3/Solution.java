@@ -1,10 +1,6 @@
 package org.blackgrammer.greedy.problem3;
 
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
-
 /**
  * 조이스틱 _ 프로그래머스 _ 탐욕법
  *
@@ -68,14 +64,6 @@ public class Solution {
         }
 
         return answer;
-    }
-
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        System.out.println(s.solution("JAN"));
-
-        System.out.println(s.solution("BAAABAAB"));
-        System.out.println(s.solution("BBAABAB"));
     }
 
 }
