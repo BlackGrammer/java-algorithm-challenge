@@ -19,20 +19,32 @@ public class Solution {
      */
 
     public int solution(int N, int number) {
-        Map<String, Integer> caseStore = new HashMap<>();
-        int answer = getCaseCnt(0, 0, 8, N, number, caseStore);
-        return answer;
-    }
+        // 1  -- 5 / 5
+        // 2  -- (5 + 5) / 5
+        // 3  -- (5 + 5 + 5) / 5 == 5 - (5 + 5) / 5
+        // 4  -- 5 - 5 / 5
+        // 5  -- 5
+        // 6  -- 5 + 5 / 5
+        // 7  -- 5 + (5 + 5) / 5
+        // 10 -- 5 + 5
+        // 11 -- 55 / 5
+        // 12 -- (55 + 5) / 5
+        // 22 -- (55 + 55 ) /5
+        // 111 -- (555
 
-    private int getCaseCnt(int prevCnt, int prevNum, int minNum, int n, int number, Map caseStore) {
-        if (prevCnt > 8) return minNum;
-        for (int i = 1, len = 8 - prevCnt; i <= len; i++) {
-            StringBuilder unitStr = new StringBuilder();
-            for (int i2 = 0; i2 < i; i2++) {
-                unitStr.append(n);
+        Map<Integer, Integer> caseMap = new HashMap<>();
+        caseMap.put(N, 1);
+        for (int i = 1; i < N; i++) {
+            int cnt;
+            if (2 * i > N) {
+                cnt = N-i+2;
+            } else {
+                cnt = i + 1;
             }
-//            if(case)
+            caseMap.put(i, cnt);
         }
+
+        return 1;
     }
 
     public static void main(String[] args) {
