@@ -14,21 +14,16 @@ public class Solution {
 
         for (int row = 1, len = triangle.length; row < len; row++) {
             for (int col = 0; col < row + 1; col++) {
-                int right = 0;
-                if (col < row) right = triangle[row - 1][col];
-                int left = 0;
-                if (col > 0) left = triangle[row - 1][col - 1];
-
                 if (col == 0) {
-                    triangle[row][col] += right;
+                    triangle[row][col] += triangle[row - 1][col];
                     continue;
                 }
                 if (col == row) {
-                    triangle[row][col] += left;
+                    triangle[row][col] += triangle[row - 1][col - 1];
                     continue;
                 }
 
-                triangle[row][col] += Math.max(left, right);
+                triangle[row][col] += Math.max(triangle[row - 1][col - 1], triangle[row - 1][col]);
                 if (row == len - 1) max = Math.max(max, triangle[row][col]);
             }
         }
