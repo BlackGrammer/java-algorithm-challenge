@@ -1,8 +1,6 @@
 package org.blackgrammer.dynamic.problem4;
 
 
-import java.util.Arrays;
-
 /**
  * 등굣길 _ 프로그래머스 _ 동적계획법
  *
@@ -13,81 +11,28 @@ public class Solution {
 
     public int solution(int m, int n, int[][] puddles) {
         int[][] nodes = new int[m][n];
-        for (int[] node : nodes) {
-            Arrays.fill(node, m * n);
-        }
-        nodes[0][0] = 0;
         for (int[] puddle : puddles) {
             nodes[puddle[0] - 1][puddle[1] - 1] = -1;
         }
 
-        return getRounteCnt(m, n, 0, 0, nodes, 0);
+        for (int col = 0; col < m; col++) {
+            for (int row = 0; row < n; row++) {
+                if (col == 0 && row == 0) continue;
+                if (col == 0 || row == 0) {
+                    if (nodes[col][row] == -1) break;
+                    nodes[col][row] = 1;
+                    continue;
+                }
+                if (nodes[col][row] == -1) continue;
+                nodes[col][row] = (Math.max(nodes[col - 1][row], 0) + nodes[col][row]) % 1000000007;
+                nodes[col][row] = (Math.max(nodes[col][row - 1], 0) + nodes[col][row]) % 1000000007;
+                nodes[col][row] %= 1000000007;
+            }
+        }
+
+        return nodes[m - 1][n - 1];
     }
 
-    private int getRounteCnt(int width, int height, int currCol, int currRow, int[][] nodes, int prevCnt) {
-        int left = currCol - 1;
-        int right = currCol + 1;
-        int up = currRow - 1;
-        int down = currRow + 1;
-
-        int cnt = prevCnt;
-
-        if (currCol > 0) {
-            int leftAccum = nodes[left][currRow];
-            int currAccum = nodes[currCol][currRow];
-            if (leftAccum >= currAccum + 1) {
-                if (leftAccum == currAccum + 1) {
-                    cnt++;
-                } else {
-                    nodes[left][currRow] = currAccum + 1;
-                    cnt = getRounteCnt(width, height, left, currRow, nodes, cnt);
-                }
-            }
-        }
-
-        if (currCol < width - 1) {
-            int rightAccum = nodes[right][currRow];
-            int currAccum = nodes[currCol][currRow];
-            if (rightAccum >= currAccum + 1) {
-                if (rightAccum == currAccum + 1) {
-                    cnt++;
-                } else {
-                    nodes[right][currRow] = currAccum + 1;
-                    if (right == width - 1 && currRow == height - 1) cnt = 1;
-                    else cnt = getRounteCnt(width, height, right, currRow, nodes, cnt);
-                }
-            }
-        }
-
-        if (currRow > 0) {
-            int upAccum = nodes[currCol][up];
-            int currAccum = nodes[currCol][currRow];
-            if (upAccum >= currAccum + 1) {
-                if (upAccum == currAccum + 1) {
-                    cnt++;
-                } else {
-                    nodes[currCol][up] = currAccum + 1;
-                    cnt = getRounteCnt(width, height, currCol, up, nodes, cnt);
-                }
-            }
-        }
-
-        if (currRow < height - 1) {
-            int downAccum = nodes[currCol][down];
-            int currAccum = nodes[currCol][currRow];
-            if (downAccum >= currAccum + 1) {
-                if (downAccum == currAccum + 1) {
-                    cnt++;
-                } else {
-                    nodes[currCol][down] = currAccum + 1;
-                    if (currCol == width - 1 && down == height - 1) cnt = 1;
-                    else cnt = getRounteCnt(width, height, currCol, down, nodes, cnt);
-                }
-            }
-        }
-
-        return cnt;
-    }
 
     public static void main(String[] args) {
         Solution s = new Solution();
