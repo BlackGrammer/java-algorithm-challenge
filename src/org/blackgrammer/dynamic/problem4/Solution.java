@@ -17,16 +17,14 @@ public class Solution {
 
         for (int col = 0; col < m; col++) {
             for (int row = 0; row < n; row++) {
-                if (col == 0 && row == 0) continue;
-                if (col == 0 || row == 0) {
-                    if (nodes[col][row] == -1) break;
+                if (col == 0 && row == 0) {
                     nodes[col][row] = 1;
-                    continue;
+                } else {
+                    if (nodes[col][row] == -1) continue;
+                    if (col > 0) nodes[col][row] += Math.max(nodes[col - 1][row], 0);
+                    if (row > 0) nodes[col][row] += Math.max(nodes[col][row - 1], 0);
+                    nodes[col][row] %= 1000000007;
                 }
-                if (nodes[col][row] == -1) continue;
-                nodes[col][row] = (Math.max(nodes[col - 1][row], 0) + nodes[col][row]) % 1000000007;
-                nodes[col][row] = (Math.max(nodes[col][row - 1], 0) + nodes[col][row]) % 1000000007;
-                nodes[col][row] %= 1000000007;
             }
         }
 
