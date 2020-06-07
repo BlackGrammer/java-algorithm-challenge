@@ -31,9 +31,4 @@ public class Solution {
         return nodes[m - 1][n - 1];
     }
 
-
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        System.out.println(s.solution(4, 3, new int[][]{{2, 2}}));
-    }
 }
