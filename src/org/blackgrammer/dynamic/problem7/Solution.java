@@ -11,45 +11,47 @@ import java.util.*;
  */
 public class Solution {
     public int solution(int K, int[][] travel) {
-        Arrays.sort(travel, Comparator.comparingInt(o -> (o[1] - o[3])));
-        Stack<int[]> bikeStack = new Stack<>();
-        int timeSum = 0;
-        int costSum = 0;
-        for (int[] t : travel) {
-            timeSum += t[0];
-            costSum += t[1];
-        }
+        Arrays.sort(travel, (prev, next) -> (next[1] - next[3]) * (prev[0] - prev[2]) - (prev[1] - prev[3]) * (next[0] - next[2]));
+        int totalTime = 0;
+        int totalRaise = 0;
 
-        for (int[] t : travel) {
-            int timeSave = t[0] - t[2];
-            int costDecrease = t[1] - t[3];
-            if (timeSum > K) {
-                bikeStack.push(new int[]{timeSave, costDecrease});
-                timeSum -= timeSave;
-                costSum -= costDecrease;
+        Stack<int[]> pavementStack = new Stack<>();
+        for (int[] route : travel) {
+            if (totalTime + route[0] <= K) {
+                totalTime += route[0];
+                totalRaise += route[1];
+                pavementStack.push(route);
             } else {
-                int prevDiffSum = 0;
-                int prevCostSum = 0;
-                Stack<int[]> tmpQueue = new Stack<>();
-                while (timeSum - prevDiffSum + timeSave <= K) {
-                    int[] target = bikeStack.pop();
-                    prevDiffSum += target[0];
-                    prevCostSum += target[1];
-                    tmpQueue.push(target);
-                }
-                if (prevCostSum > costDecrease) {
-                    timeSum += prevDiffSum - timeSave;
-                    costSum += prevCostSum - costDecrease;
-                    bikeStack.push(new int[]{timeSave, costDecrease});
+                if (totalTime + route[2] <= K) {
+                    totalTime += route[2];
+                    totalRaise += route[3];
                 } else {
-                    while (!tmpQueue.isEmpty()) {
-                        bikeStack.push(tmpQueue.pop());
+                    while (true) {
+                        int[] prevRoute = pavementStack.pop();
+                        totalTime -= (prevRoute[0] - prevRoute[2]);
+                        totalRaise -= (prevRoute[1] - prevRoute[3]);
+                        if (totalTime + route[0] <= K) {
+                            totalTime += route[0];
+                            totalRaise += route[1];
+                            pavementStack.push(route);
+                            break;
+                        } else if (totalTime + route[2] <= K) {
+                            totalTime += route[2];
+                            totalRaise += route[3];
+                            break;
+                        }
                     }
                 }
             }
         }
 
-        return costSum;
+        return totalRaise;
+    }
+
+    public static void main(String[] args) {
+        Solution s = new Solution();
+        System.out.println(s.solution(1650, new int[][]{{500, 200, 200, 100}, {800, 370, 300, 120}, {700, 250, 300, 90}})); // 660
+        System.out.println(s.solution(3000, new int[][]{{1000, 2000, 300, 700}, {1100, 1900, 400, 900}, {900, 1800, 400, 700}, {1200, 2300, 500, 1200}})); // 5900
     }
 
 
