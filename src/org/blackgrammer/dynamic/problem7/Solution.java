@@ -1,9 +1,6 @@
 package org.blackgrammer.dynamic.problem7;
 
 
-import java.util.ArrayDeque;
-import java.util.Queue;
-
 /**
  * 서울에서 경산까지 _ 프로그래머스 _ 동적계획법
  *
@@ -12,36 +9,28 @@ import java.util.Queue;
  */
 public class Solution {
     public int solution(int K, int[][] travel) {
-        Queue<int[]> routeQueue = new ArrayDeque<>();
-        routeQueue.offer(new int[]{travel[0][0], travel[0][1]});
-        routeQueue.offer(new int[]{travel[0][2], travel[0][3]});
+        int[][] routeArr = new int[travel.length][K + 1];
+        int[] first = travel[0];
+        routeArr[0][first[0]] = first[1];
+        routeArr[0][first[2]] = first[3];
 
-        for (int i = 1, len = travel.length; i < len; i++) {
-            int[] target = travel[i];
-            for (int i2 = 0, routeQueueCnt = routeQueue.size(); i2 < routeQueueCnt; i2++) {
-                int[] prev = routeQueue.poll();
-                if (prev[0] + target[0] <= K) {
-                    routeQueue.offer(new int[]{prev[0] + target[0], prev[1] + target[1]});
-                }
-                if (prev[0] + target[2] <= K) {
-                    routeQueue.offer(new int[]{prev[0] + target[2], prev[1] + target[3]});
-                }
+        int maxRaise = 0;
+        for (int cityIdx = 1, len = travel.length; cityIdx < len; cityIdx++) {
+            int[] target = travel[cityIdx];
+            for (int time = 0; time <= K; time++) {
+                int prevRaise = routeArr[cityIdx - 1][time];
+                if (prevRaise == 0) continue;
+
+                if (time + target[0] <= K) routeArr[cityIdx][time + target[0]] = Math.max(routeArr[cityIdx][time + target[0]], prevRaise + target[1]);
+                if (time + target[2] <= K) routeArr[cityIdx][time + target[2]] = Math.max(routeArr[cityIdx][time + target[2]], prevRaise + target[3]);
             }
         }
 
-        int maxRaise = 0;
-        while(!routeQueue.isEmpty()) {
-            maxRaise = Math.max(routeQueue.poll()[1], maxRaise);
+        for (int time = 0; time <= K; time++) {
+            maxRaise = Math.max(maxRaise, routeArr[travel.length - 1][time]);
         }
 
         return maxRaise;
     }
-
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        System.out.println(s.solution(1650, new int[][]{{500, 200, 200, 100}, {800, 370, 300, 120}, {700, 250, 300, 90}})); // 660
-        System.out.println(s.solution(3000, new int[][]{{1000, 2000, 300, 700}, {1100, 1900, 400, 900}, {900, 1800, 400, 700}, {1200, 2300, 500, 1200}})); // 5900
-    }
-
 
 }
