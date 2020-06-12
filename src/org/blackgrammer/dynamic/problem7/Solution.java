@@ -1,7 +1,8 @@
 package org.blackgrammer.dynamic.problem7;
 
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 /**
  * 서울에서 경산까지 _ 프로그래머스 _ 동적계획법
@@ -11,41 +12,29 @@ import java.util.*;
  */
 public class Solution {
     public int solution(int K, int[][] travel) {
-        Arrays.sort(travel, (prev, next) -> (next[1] - next[3]) * (prev[0] - prev[2]) - (prev[1] - prev[3]) * (next[0] - next[2]));
-        int totalTime = 0;
-        int totalRaise = 0;
+        Queue<int[]> routeQueue = new ArrayDeque<>();
+        routeQueue.offer(new int[]{travel[0][0], travel[0][1]});
+        routeQueue.offer(new int[]{travel[0][2], travel[0][3]});
 
-        Stack<int[]> pavementStack = new Stack<>();
-        for (int[] route : travel) {
-            if (totalTime + route[0] <= K) {
-                totalTime += route[0];
-                totalRaise += route[1];
-                pavementStack.push(route);
-            } else {
-                if (totalTime + route[2] <= K) {
-                    totalTime += route[2];
-                    totalRaise += route[3];
-                } else {
-                    while (true) {
-                        int[] prevRoute = pavementStack.pop();
-                        totalTime -= (prevRoute[0] - prevRoute[2]);
-                        totalRaise -= (prevRoute[1] - prevRoute[3]);
-                        if (totalTime + route[0] <= K) {
-                            totalTime += route[0];
-                            totalRaise += route[1];
-                            pavementStack.push(route);
-                            break;
-                        } else if (totalTime + route[2] <= K) {
-                            totalTime += route[2];
-                            totalRaise += route[3];
-                            break;
-                        }
-                    }
+        for (int i = 1, len = travel.length; i < len; i++) {
+            int[] target = travel[i];
+            for (int i2 = 0, routeQueueCnt = routeQueue.size(); i2 < routeQueueCnt; i2++) {
+                int[] prev = routeQueue.poll();
+                if (prev[0] + target[0] <= K) {
+                    routeQueue.offer(new int[]{prev[0] + target[0], prev[1] + target[1]});
+                }
+                if (prev[0] + target[2] <= K) {
+                    routeQueue.offer(new int[]{prev[0] + target[2], prev[1] + target[3]});
                 }
             }
         }
 
-        return totalRaise;
+        int maxRaise = 0;
+        while(!routeQueue.isEmpty()) {
+            maxRaise = Math.max(routeQueue.poll()[1], maxRaise);
+        }
+
+        return maxRaise;
     }
 
     public static void main(String[] args) {
