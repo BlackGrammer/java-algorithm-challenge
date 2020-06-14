@@ -28,9 +28,7 @@ public class Solution {
         int cnt = 0;
         while (!nextNodes.isEmpty()) {
             int curr = nextNodes.poll();
-            Iterator<Integer> it = vMap.get(curr).iterator();
-            while (it.hasNext()) {
-                int target = it.next();
+            for (int target : vMap.get(curr)) {
                 if (distances[target - 1] != 0) continue;
                 int newDistance = distances[curr - 1] + 1;
                 distances[target - 1] = newDistance;
