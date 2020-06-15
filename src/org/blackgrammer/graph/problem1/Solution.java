@@ -15,8 +15,8 @@ public class Solution {
         Map<Integer, Set<Integer>> vMap = new HashMap<>();
 
         for (int[] edge : edges) {
-            if (vMap.get(edge[0]) == null) vMap.put(edge[0], new HashSet<>());
-            if (vMap.get(edge[1]) == null) vMap.put(edge[1], new HashSet<>());
+            vMap.computeIfAbsent(edge[0], k -> new HashSet<>());
+            vMap.computeIfAbsent(edge[1], k -> new HashSet<>());
             if (edge[1] != 1) vMap.get(edge[0]).add(edge[1]);
             if (edge[0] != 1) vMap.get(edge[1]).add(edge[0]);
         }
