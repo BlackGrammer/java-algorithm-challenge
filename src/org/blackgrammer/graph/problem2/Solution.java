@@ -10,23 +10,24 @@ package org.blackgrammer.graph.problem2;
 public class Solution {
 
     public int solution(int n, int[][] results) {
-        boolean[][] edge = new boolean[n + 1][n + 1];
+        boolean[][] edges = new boolean[n + 1][n + 1];
         int[] cntArr = new int[n + 1];
         int cnt = 0;
+
         for (int[] result : results) {
-            edge[result[0]][result[1]] = true;
+            edges[result[0]][result[1]] = true;
             if (++cntArr[result[0]] == n - 1) cnt++;
             if (++cntArr[result[1]] == n - 1) cnt++;
-            for (int idx = 1; idx <= n; idx++) {
-                if (edge[idx][result[0]] && !edge[idx][result[1]]) {
-                    edge[idx][result[1]] = true;
-                    if (++cntArr[idx] == n - 1) cnt++;
-                    if (++cntArr[result[1]] == n - 1) cnt++;
-                }
-                if (edge[result[1]][idx] && !edge[result[0]][idx]) {
-                    edge[result[0]][idx] = true;
-                    if (++cntArr[idx] == n - 1) cnt++;
-                    if (++cntArr[result[0]] == n - 1) cnt++;
+        }
+
+        for (int target = 1; target <= n; target++) {
+            for (int winner = 1; winner <= n; winner++) {
+                for (int loser = 1; loser <= n; loser++) {
+                    if (edges[winner][target] && edges[target][loser] && !edges[winner][loser]) {
+                        edges[winner][loser] = true;
+                        if (++cntArr[winner] == n - 1) cnt++;
+                        if (++cntArr[loser] == n - 1) cnt++;
+                    }
                 }
             }
         }
@@ -34,10 +35,5 @@ public class Solution {
         return cnt;
     }
 
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        System.out.println(s.solution(5, new int[][]{{4, 3}, {4, 2}, {3, 2}, {1, 2}, {2, 5}})); //2
-        System.out.println(s.solution(5, new int[][]{{4, 3}, {4, 2}, {3, 2}, {1, 2}, {2, 5}, {1, 4}}));// 5
-    }
 
 }
