@@ -13,78 +13,53 @@ public class Solution {
 
     public int solution(int n, int[][] edges) {
         int edgeCnt = edges.length;
-        Stack<Integer> nodeStack;
-        Set<Integer> cycleGroup = new HashSet<>();
-        boolean[][] visitEdges;
-        boolean[] possible = new boolean[n + 1];
-        Arrays.fill(possible, true);
-
-        // stack, marker 초기화
-        nodeStack = new Stack<>();
-        visitEdges = new boolean[n + 1][n + 1];
-
-        nodeStack.push(1);
-        cycleGroup.add(1);
-
-        // stack 에 node 쌓아가면서 모든 노드 bfs
-        while (!nodeStack.isEmpty()) {
-            int bottom = nodeStack.peek();
-
-            for (int edgeIdx = 0; edgeIdx < edgeCnt; edgeIdx++) {
-
-                int[] targetEdge = edges[edgeIdx];
-                int node_1 = targetEdge[0];
-                int node_2 = targetEdge[1];
-
-                if (node_1 == bottom || node_2 == bottom) {
-                    int targetNode = node_1 == bottom ? node_2 : node_1;
-
-                    // 방문한 방향의 edge 는 넘어간다
-                    if (visitEdges[bottom][targetNode]) continue;
-                    visitEdges[bottom][targetNode] = true;
-                    if (!cycleGroup.add(targetNode)) {
-                        System.out.println("bottom = " + bottom);
-                        System.out.println("targetNode = " + targetNode);
-                        // 사이클 발견
-                        // 기존 사이클과 그룹과 비교하여 중복되는 노드만 남기기
-                        // 사이클을 구성하는 노드의 최소 그룹 구해야한다
-                        Stack<Integer> tmpStack = new Stack<>();
-                        while (true) {
-                            int prevNode = nodeStack.pop();
-                            tmpStack.push(prevNode);
-                            if (prevNode == targetNode) break;
-                        }
-                        boolean[] tmpGroup = new boolean[n + 1];
-                        while (!tmpStack.isEmpty()) {
-                            int groupNum = tmpStack.pop();
-                            tmpGroup[groupNum] = true;
-                            nodeStack.push(groupNum);
-                        }
-
-                        System.out.println("possible = " + Arrays.toString(possible));
-                        System.out.println("tmpGroup" + Arrays.toString(tmpGroup));
-                        for (int groupNode = 1; groupNode < n; groupNode++) {
-                            possible[groupNode] = possible[groupNode] && tmpGroup[groupNode];
-                        }
-                        continue;
-                    } else {
-                        nodeStack.push(targetNode);
-                    }
-                    break;
-                }
-            }
-
-            if (nodeStack.peek() == bottom) {
-                nodeStack.pop();
-                cycleGroup.remove(bottom);
-            }
-
+        boolean[][] edgeNodeRelation = new boolean[edgeCnt][n + 1];
+        for (int edgeIdx = 0; edgeIdx < edgeCnt; edgeIdx++) {
+            int[] targetEdge = edges[edgeIdx];
+            edgeNodeRelation[edgeIdx][targetEdge[0]] = true;
+            edgeNodeRelation[edgeIdx][targetEdge[1]] = true;
         }
 
-        // posiible 돌면서 연산후 return
-        int answer = 0;
-        for (int nodeIdx = 1; nodeIdx < n; nodeIdx++) {
-            if (possible[nodeIdx]) answer += nodeIdx;
+
+        boolean[] visitEdge;
+        boolean[] visitNode;
+        Stack<Integer> nodeStack;
+        int answer = n * (n + 1) / 2;
+        for (int remove = 1; remove <= n; remove++) {
+            visitEdge = new boolean[edgeCnt];
+            visitNode = new boolean[n + 1];
+            nodeStack = new Stack<>();
+            int start = (remove + 1) % n + 1;
+            visitNode[start] = true;
+            nodeStack.push(start);
+
+            boolean isCycle = false;
+            while (!nodeStack.isEmpty()) {
+                int bottom = nodeStack.peek();
+                for (int edgeIdx = 0; edgeIdx < edgeCnt; edgeIdx++) {
+                    // 제거한 node 의 edge 라면 continue
+                    if (edgeNodeRelation[edgeIdx][remove]) continue;
+                    // 방문한 edge 라면 continue
+                    if (visitEdge[edgeIdx]) continue;
+                    // 대상 node 의 edge 아니면 continue
+                    if (!edgeNodeRelation[edgeIdx][bottom]) continue;
+
+                    visitEdge[edgeIdx] = true;
+                    int[] targetEdge = edges[edgeIdx];
+                    int targetNode = targetEdge[0] == bottom ? targetEdge[1] : targetEdge[0];
+                    if (visitNode[targetNode]) {
+                        answer -= remove;
+                        isCycle = true;
+                        break;
+                    } else {
+                        visitNode[targetNode] = true;
+                        nodeStack.push(targetNode);
+                    }
+                }
+                if(isCycle) break;
+                if (bottom == nodeStack.peek()) nodeStack.pop();
+            }
+
         }
         return answer;
     }
