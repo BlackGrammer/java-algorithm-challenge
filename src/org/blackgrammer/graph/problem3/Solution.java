@@ -13,55 +13,56 @@ public class Solution {
 
     public int solution(int n, int[][] edges) {
         int edgeCnt = edges.length;
-        boolean[][] edgeNodeRelation = new boolean[edgeCnt][n + 1];
-        for (int edgeIdx = 0; edgeIdx < edgeCnt; edgeIdx++) {
-            int[] targetEdge = edges[edgeIdx];
-            edgeNodeRelation[edgeIdx][targetEdge[0]] = true;
-            edgeNodeRelation[edgeIdx][targetEdge[1]] = true;
-        }
+        boolean[] edgeMarker = new boolean[edgeCnt];
+        boolean[] nodeMarker = new boolean[n + 1];
+        boolean[] intersection = new boolean[n + 1];
+        int intersectionNodeSum = n * (n + 1) / 2;
+        Arrays.fill(intersection, true);
+        Stack<Integer> nodeStack = new Stack<>();
+        boolean[] cycleNodeGroup = new boolean[n + 1];
 
+        nodeStack.push(1);
+        nodeMarker[1] = true;
+        while (!nodeStack.isEmpty() && intersectionNodeSum > 0) {
+            int start = nodeStack.peek();
+            for (int edgeIdx = 0; edgeIdx < edgeCnt; edgeIdx++) {
+                // 방문한 노드 pass
+                if (edgeMarker[edgeIdx]) continue;
 
-        boolean[] visitEdge;
-        boolean[] visitNode;
-        Stack<Integer> nodeStack;
-        int answer = n * (n + 1) / 2;
-        for (int remove = 1; remove <= n; remove++) {
-            visitEdge = new boolean[edgeCnt];
-            visitNode = new boolean[n + 1];
-            nodeStack = new Stack<>();
-            int start = (remove + 1) % n + 1;
-            visitNode[start] = true;
-            nodeStack.push(start);
+                int[] targetEdge = edges[edgeIdx];
+                int node_1 = targetEdge[0];
+                int node_2 = targetEdge[1];
 
-            boolean isCycle = false;
-            while (!nodeStack.isEmpty()) {
-                int bottom = nodeStack.peek();
-                for (int edgeIdx = 0; edgeIdx < edgeCnt; edgeIdx++) {
-                    // 제거한 node 의 edge 라면 continue
-                    if (edgeNodeRelation[edgeIdx][remove]) continue;
-                    // 방문한 edge 라면 continue
-                    if (visitEdge[edgeIdx]) continue;
-                    // 대상 node 의 edge 아니면 continue
-                    if (!edgeNodeRelation[edgeIdx][bottom]) continue;
+                // 대상 node 의 edge 아니면 pass
+                if (node_1 != start && node_2 != start) continue;
 
-                    visitEdge[edgeIdx] = true;
-                    int[] targetEdge = edges[edgeIdx];
-                    int targetNode = targetEdge[0] == bottom ? targetEdge[1] : targetEdge[0];
-                    if (visitNode[targetNode]) {
-                        answer -= remove;
-                        isCycle = true;
-                        break;
-                    } else {
-                        visitNode[targetNode] = true;
-                        nodeStack.push(targetNode);
+                int targetNode = node_1 == start ? node_2 : node_1;
+                edgeMarker[edgeIdx] = true;
+                cycleNodeGroup[start] = true;
+                cycleNodeGroup[targetNode] = true;
+
+                // cycle 발견
+                if (nodeMarker[targetNode]) {
+                    for (int nodeIdx = 1; nodeIdx <= n; nodeIdx++) {
+                        if (!intersection[nodeIdx]) continue;
+                        boolean isIntersected = intersection[nodeIdx] && cycleNodeGroup[nodeIdx];
+                        intersection[nodeIdx] = isIntersected;
+                        if (!isIntersected) intersectionNodeSum -= nodeIdx;
                     }
+                    Arrays.fill(cycleNodeGroup, false);
+                    break;
+                } else {
+                    nodeStack.push(targetNode);
+                    nodeMarker[targetNode] = true;
+                    break;
                 }
-                if(isCycle) break;
-                if (bottom == nodeStack.peek()) nodeStack.pop();
             }
-
+            if (start == nodeStack.peek()) {
+                cycleNodeGroup[start] = false;
+                nodeStack.pop();
+            }
         }
-        return answer;
+        return intersectionNodeSum;
     }
 
     public static void main(String[] args) {
