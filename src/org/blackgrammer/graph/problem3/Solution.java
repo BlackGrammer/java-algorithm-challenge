@@ -10,7 +10,7 @@ import java.util.*;
  * @see <a href="https://programmers.co.kr/learn/courses/30/lessons/49188">프로그래머스</a>
  */
 public class Solution {
-
+    // TODO : 사이클제거 문제 시간복잡도 해결필요
     public int solution(int n, int[][] edges) {
         int edgeCnt = edges.length;
         boolean[] edgeMarker = new boolean[edgeCnt];
@@ -25,6 +25,7 @@ public class Solution {
         nodeMarker[1] = true;
         while (!nodeStack.isEmpty() && intersectionNodeSum > 0) {
             int start = nodeStack.peek();
+            boolean isCycle = false;
             for (int edgeIdx = 0; edgeIdx < edgeCnt; edgeIdx++) {
                 // 방문한 노드 pass
                 if (edgeMarker[edgeIdx]) continue;
@@ -50,6 +51,7 @@ public class Solution {
                         if (!isIntersected) intersectionNodeSum -= nodeIdx;
                     }
                     Arrays.fill(cycleNodeGroup, false);
+                    isCycle = true;
                     break;
                 } else {
                     nodeStack.push(targetNode);
@@ -57,7 +59,7 @@ public class Solution {
                     break;
                 }
             }
-            if (start == nodeStack.peek()) {
+            if (start == nodeStack.peek() && !isCycle) {
                 cycleNodeGroup[start] = false;
                 nodeStack.pop();
             }
