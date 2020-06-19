@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @see <a href="https://programmers.co.kr/learn/courses/30/lessons/49190">프로그래머스</a>
  */
 public class Solution {
-
+    // TODO : 방의 개수 문제 보류..
     public int solution(int[] arrows) {
         int arrowCnt = arrows.length;
         int[] point = new int[2];
