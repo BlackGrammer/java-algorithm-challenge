@@ -9,11 +9,7 @@ public class Solution2 implements Solution {
     public String solution(String[] participant, String[] completion) {
         Map<String, Integer> completionMap = new HashMap<>();
         for (String completionOne : completion) {
-            Integer prevCount = completionMap.get(completionOne);
-            if (prevCount == null) {
-                prevCount = 0;
-            }
-            completionMap.put(completionOne, prevCount + 1);
+            completionMap.put(completionOne, completionMap.getOrDefault(completionOne, 0) + 1);
         }
 
         String answer = null;
